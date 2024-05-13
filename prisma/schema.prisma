@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TipoQueimada {
+  id        Int        @id @default(autoincrement())
+  nome      String
+  queimadas Queimada[]
+}
+
+model Estado {
+  id           Int         @id @default(autoincrement())
+  nomeEstado   String
+  municipios   Municipio[]
+}
+
+model Utilizador {
+  id            Int         @id @default(autoincrement())
+  nome          String
+  username      String      @unique
+  email         String      @unique
+  password      String
+  fotografia    String
+  tipoUtilizador    TipoUtilizador[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  queimadas     Queimada[]
+  municipio     Municipio[]
+}
+
+model TipoUtilizador {
+  id            Int         @id @default(autoincrement())
+  nome          String
+  utilizadores  Utilizador[]  
+}
+
+model Queimada {
+  id            Int         @id @default(autoincrement())
+  data          DateTime
+  motivo        String
+  latitude      Float
+  longitude     Float
+  outrosDados   String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  utilizador    Utilizador   @relation(fields: [utilizadorId], references: [id])
+  utilizadorId  Int
+}
+
+model Municipio {
+  id            Int         @id @default(autoincrement())
+  nif           String
+  morada        String
+  responsavel   String
+  estado        Estado      @relation(fields: [estadoId], references: [id])
+  estadoId      Int
+  utilizador    Utilizador  @relation(fields: [utilizadorId], references: [id])
+  utilizadorId  Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model EstadoUtilizador {
+  id             Int         @id @default(autoincrement())
+  nomeEstado     String
+  utilizador     Utilizador[]
+}
