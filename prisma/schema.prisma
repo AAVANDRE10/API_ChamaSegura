@@ -31,6 +31,7 @@ model Utilizador {
   updatedAt     DateTime    @updatedAt
   queimadas     Queimada[]
   municipio     Municipio[]
+  estados         EstadoUtilizador[]
 }
 
 model TipoUtilizador {
@@ -50,6 +51,8 @@ model Queimada {
   updatedAt     DateTime    @updatedAt
   utilizador    Utilizador   @relation(fields: [utilizadorId], references: [id])
   utilizadorId  Int
+  tipoQueimada  TipoQueimada @relation(fields: [tipoQueimadaId], references: [id])
+  tipoQueimadaId Int
 }
 
 model Municipio {

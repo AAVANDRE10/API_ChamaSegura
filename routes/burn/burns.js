@@ -1,5 +1,5 @@
 const burnRouter = require('express').Router();
-const controller = require('../../controllers/burn');
+const controller = require('../../controllers/burn/burn');
 const authMiddleware = require('../../middlewares/auth');
 
 //use auth middleware
