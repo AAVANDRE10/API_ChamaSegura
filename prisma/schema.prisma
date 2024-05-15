@@ -7,69 +7,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model TipoQueimada {
+model FireType {
   id        Int        @id @default(autoincrement())
-  nome      String
-  queimadas Queimada[]
+  name      String
+  fires     Fire[]
 }
 
-model Estado {
+model State {
   id           Int         @id @default(autoincrement())
-  nomeEstado   String
-  municipios   Municipio[]
+  stateName    String
+  municipalities   Municipality[]
 }
 
-model Utilizador {
+model User {
   id            Int         @id @default(autoincrement())
-  nome          String
+  name          String
   username      String      @unique
   email         String      @unique
   password      String
-  fotografia    String
-  tipoUtilizador    TipoUtilizador[]
+  photo         String
+  userType      UserType[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  queimadas     Queimada[]
-  municipio     Municipio[]
-  estados         EstadoUtilizador[]
+  fires         Fire[]
+  municipality  Municipality[]
+  stateUsers    StateUser[]
 }
 
-model TipoUtilizador {
+model UserType {
   id            Int         @id @default(autoincrement())
-  nome          String
-  utilizadores  Utilizador[]  
+  name          String
+  users         User[]  
 }
 
-model Queimada {
+model Fire {
   id            Int         @id @default(autoincrement())
-  data          DateTime
-  motivo        String
+  date          DateTime
+  reason        String
   latitude      Float
   longitude     Float
-  outrosDados   String?
+  otherData     String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  utilizador    Utilizador   @relation(fields: [utilizadorId], references: [id])
-  utilizadorId  Int
-  tipoQueimada  TipoQueimada @relation(fields: [tipoQueimadaId], references: [id])
-  tipoQueimadaId Int
+  user          User   @relation(fields: [userId], references: [id])
+  userId        Int
+  fireType      FireType @relation(fields: [fireTypeId], references: [id])
+  fireTypeId    Int
 }
 
-model Municipio {
+model Municipality {
   id            Int         @id @default(autoincrement())
-  nif           String
-  morada        String
-  responsavel   String
-  estado        Estado      @relation(fields: [estadoId], references: [id])
-  estadoId      Int
-  utilizador    Utilizador  @relation(fields: [utilizadorId], references: [id])
-  utilizadorId  Int
+  taxNumber     String
+  address       String
+  responsible   String
+  state         State      @relation(fields: [stateId], references: [id])
+  stateId       Int
+  user          User  @relation(fields: [userId], references: [id])
+  userId        Int
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
 
-model EstadoUtilizador {
+model StateUser {
   id             Int         @id @default(autoincrement())
-  nomeEstado     String
-  utilizador     Utilizador[]
+  stateName     String
+  user          User[]
 }
