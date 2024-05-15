@@ -3,7 +3,7 @@ const fs = require('fs');
 //return all burns
 exports.getAll = async (req, res) => {
     try {
-        const burns = await prisma.fire.findMany();
+        const burns = await prisma.burn.findMany();
         return res.json(burns);
     } catch (error) {
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -14,7 +14,7 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
     try {
         const id = parseInt(req.params.number);
-        const burn = await prisma.fire.findUnique({
+        const burn = await prisma.burn.findUnique({
             where: { id }
         });
         if (!burn) return res.status(404).json({ error: 'Burn not found' });
@@ -27,8 +27,8 @@ exports.getById = async (req, res) => {
 //creates burn
 exports.create = async (req, res) => {
     try{
-        const { date, reason, latitude, longitude, otherData, userId, fireTypeId } = req.body;
-        const newBurn = await prisma.fire.create({
+        const { date, reason, latitude, longitude, otherData, userId, burnTypeId } = req.body;
+        const newBurn = await prisma.burn.create({
             data: {
                 date,
                 reason,
@@ -36,7 +36,7 @@ exports.create = async (req, res) => {
                 longitude,
                 otherData,
                 userId,
-                fireTypeId
+                burnTypeId
             }
         });
         return res.status(201).json(newBurn);
@@ -49,8 +49,8 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     try {
         const id = parseInt(req.params.number);
-        const { date, reason, latitude, longitude, otherData, userId, fireTypeId } = req.body;
-        const updatedBurn = await prisma.fire.update({
+        const { date, reason, latitude, longitude, otherData, userId, burnTypeId } = req.body;
+        const updatedBurn = await prisma.burn.update({
             where: { id },
             data: {
                 date,
@@ -59,7 +59,7 @@ exports.update = async (req, res) => {
                 longitude,
                 otherData,
                 userId,
-                fireTypeId
+                burnTypeId
             }
         });
         return res.json(updatedBurn);
@@ -72,7 +72,7 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     try {
         const id = parseInt(req.params.number);
-        await prisma.fire.delete({
+        await prisma.burn.delete({
             where: { id }
         });
         return res.send("ok");
