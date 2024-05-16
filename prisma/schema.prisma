@@ -26,12 +26,15 @@ model User {
   email         String      @unique
   password      String
   photo         String
-  userType      UserType[]
+  userType      UserType @relation(fields: [userTypeId] , references: [id])
+  userTypeId    Int
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   burns         Burn[]
   municipality  Municipality[]
-  stateUsers    StateUser[]
+  stateUsers    StateUser @relation(fields: [stateUsersId] , references: [id])
+  stateUsersId Int
+  
 }
 
 model UserType {
