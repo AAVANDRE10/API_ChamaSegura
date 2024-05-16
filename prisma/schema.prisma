@@ -7,85 +7,73 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model BurnType {
-  id    Int    @id @default(autoincrement())
-  name  String
-  burns Burn[]
-
-  @@map("burn_type")
+// TODO: add new types of burns
+enum BurnType {
+  REGCLEAN
+  PARTICULAR
 }
 
-model State {
-  id             Int            @id @default(autoincrement())
-  stateName      String         @map("state_name")
-  municipalities Municipality[]
-
-  @@map("state")
+enum State {
+  APPROVED
+  PENDING
+  PENDINGCM
+  DENIED
 }
 
-model User {
-  id           Int            @id @default(autoincrement())
+model Users {
+  id           Int              @id @default(autoincrement())
   name         String
-  username     String         @unique
-  email        String         @unique
+  username     String           @unique
+  email        String           @unique
   password     String
   photo        String
-  userType     UserType       @relation(fields: [userTypeId], references: [id])
-  userTypeId   Int            @map("user_type_id")
-  createdAt    DateTime       @default(now()) @map("created_at")
-  updatedAt    DateTime       @updatedAt @map("updated_at")
-  burns        Burn[]
-  municipality Municipality[]
-  stateUsers   StateUser      @relation(fields: [stateUsersId], references: [id])
-  stateUsersId Int            @map("state_users_id")
+  type         UserType         @default(REGULAR)
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  burns        Burns[]
+  municipality Municipalities[]
+  state        StateUser        @default(ENABLED)
 
-  @@map("user")
+  @@map("users")
 }
 
-model UserType {
-  id    Int    @id @default(autoincrement())
-  name  String
-  users User[]
-
-  @@map("user_type")
+enum UserType {
+  REGULAR
+  ICNF
+  CM
 }
 
-model Burn {
-  id         Int      @id @default(autoincrement())
-  date       DateTime
-  reason     String
-  latitude   Float
-  longitude  Float
-  otherData  String?  @map("other_data")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int      @map("user_id")
-  burnType   BurnType @relation(fields: [burnTypeId], references: [id])
-  burnTypeId Int      @map("burn_type_id")
+model Burns {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  reason    String
+  latitude  Float
+  longitude Float
+  otherData String?  @map("other_data")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      Users    @relation(fields: [userId], references: [id])
+  userId    Int      @map("user_id")
+  type      BurnType @default(REGCLEAN)
 
-  @@map("burn")
+  @@map("burns")
 }
 
-model Municipality {
+model Municipalities {
   id          Int      @id @default(autoincrement())
-  taxNumber   String
+  taxNumber   String   @map("tax_number")
   address     String
   responsible String
-  state       State    @relation(fields: [stateId], references: [id])
-  stateId     Int      @map("state_id")
-  user        User     @relation(fields: [userId], references: [id])
+  state       State    @default(PENDING)
+  user        Users    @relation(fields: [userId], references: [id])
   userId      Int      @map("user_id")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@map("municipality")
+  @@map("municipalities")
 }
 
-model StateUser {
-  id        Int    @id @default(autoincrement())
-  stateName String @map("state_name")
-  user      User[]
-
-  @@map("state_user")
+enum StateUser {
+  ENABLED
+  DISBALED
 }

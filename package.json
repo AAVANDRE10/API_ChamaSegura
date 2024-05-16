@@ -10,7 +10,8 @@
     "build": "node server.js"
   },
   "prisma": {
-    "schema": "prisma/schema.prisma"
+    "schema": "prisma/schema.prisma",
+    "seed": "node prisma/seed.js"
   },
   "author": "Marcelo Antunes Fernandes",
   "license": "ISC",
