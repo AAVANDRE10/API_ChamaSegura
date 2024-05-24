@@ -8,7 +8,7 @@ exports.signin = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.users.findUnique({
             where: {
                 email: email,
             },
@@ -31,12 +31,11 @@ exports.signin = async (req, res) => {
     }
 }
 
-
 exports.signup = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, username, email, password, photo, type } = req.body;
 
-        const existingUser = await prisma.user.findUnique({
+        const existingUser = await prisma.users.findUnique({
             where: {
                 email: email,
             },
@@ -48,11 +47,14 @@ exports.signup = async (req, res) => {
 
         const hashedPassword = bcrypt.hashSync(password, 8);
 
-        const newUser = await prisma.user.create({
+        const newUser = await prisma.users.create({
             data: {
-                email: email,
                 name: name,
+                username: username,
+                email: email,
                 password: hashedPassword,
+                photo: photo,
+                type: type,
             },
         });
 
