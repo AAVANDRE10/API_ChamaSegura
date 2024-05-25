@@ -1,9 +1,12 @@
 const fs = require('fs');
 
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
 //return all burns
 exports.getAll = async (req, res) => {
     try {
-        const burns = await prisma.burn.findMany();
+        const burns = await prisma.burns.findMany();
         return res.json(burns);
     } catch (error) {
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -14,7 +17,7 @@ exports.getAll = async (req, res) => {
 exports.getById = async (req, res) => {
     try {
         const id = parseInt(req.params.number);
-        const burn = await prisma.burn.findUnique({
+        const burn = await prisma.burns.findUnique({
             where: { id }
         });
         if (!burn) return res.status(404).json({ error: 'Burn not found' });
@@ -27,42 +30,24 @@ exports.getById = async (req, res) => {
 //creates burn
 exports.create = async (req, res) => {
     try{
-        const { date, reason, latitude, longitude, otherData, userId, burnTypeId } = req.body;
-        const newBurn = await prisma.burn.create({
+        const { reason, latitude, longitude, otherData, userId, type } = req.body;
+        
+        if (!reason || !latitude || !longitude || !userId || !type) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const newBurn = await prisma.burns.create({
             data: {
-                date,
+                date: new Date(),
                 reason,
                 latitude,
                 longitude,
                 otherData,
                 userId,
-                burnTypeId
+                type
             }
         });
         return res.status(201).json(newBurn);
-    } catch (error) {
-        return res.status(500).json({ error: 'Internal Server Error' });
-    }
-}
-
-//updates burn
-exports.update = async (req, res) => {
-    try {
-        const id = parseInt(req.params.number);
-        const { date, reason, latitude, longitude, otherData, userId, burnTypeId } = req.body;
-        const updatedBurn = await prisma.burn.update({
-            where: { id },
-            data: {
-                date,
-                reason,
-                latitude,
-                longitude,
-                otherData,
-                userId,
-                burnTypeId
-            }
-        });
-        return res.json(updatedBurn);
     } catch (error) {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -72,7 +57,7 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     try {
         const id = parseInt(req.params.number);
-        await prisma.burn.delete({
+        await prisma.burns.delete({
             where: { id }
         });
         return res.send("ok");
