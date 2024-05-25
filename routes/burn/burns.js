@@ -5,7 +5,7 @@ const authMiddleware = require('../../middlewares/auth');
 //use auth middleware
 burnRouter.use(authMiddleware);
 
-//students CRUD
+//burns CRUD
 burnRouter.get('/', controller.getAll); //read all
 burnRouter.get('/:number', controller.getById); //read one by his id (burn number)
 burnRouter.post('/create', controller.create); //create new burn
