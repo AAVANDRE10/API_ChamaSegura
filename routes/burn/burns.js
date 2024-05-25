@@ -5,11 +5,10 @@ const authMiddleware = require('../../middlewares/auth');
 //use auth middleware
 burnRouter.use(authMiddleware);
 
-//students CRUD
+//burns CRUD
 burnRouter.get('/', controller.getAll); //read all
-burnRouter.get('/:number', controller.getById); //read one by his id (student number)
-burnRouter.post('/create', controller.create); //create new student
-burnRouter.put('/update', controller.update); //update student
-burnRouter.delete('/delete/:number', controller.delete); //delete student
+burnRouter.get('/:number', controller.getById); //read one by his id (burn number)
+burnRouter.post('/create', controller.create); //create new burn
+burnRouter.delete('/delete/:number', controller.delete); //delete burn
 
 module.exports = burnRouter;

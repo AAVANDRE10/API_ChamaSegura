@@ -1,38 +1,67 @@
 const fs = require('fs');
 
-//return all students
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+//return all burns
 exports.getAll = async (req, res) => {
-    return res.send("ok");
+    try {
+        const burns = await prisma.burns.findMany();
+        return res.json(burns);
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
-//return student by his id (student number)
+//return burn by his id (burn number)
 exports.getById = async (req, res) => {
-    //get student id requested
-    const id = req.params.number;
-    //just return same id
-    return res.send(id);
+    try {
+        const id = parseInt(req.params.number);
+        const burn = await prisma.burns.findUnique({
+            where: { id }
+        });
+        if (!burn) return res.status(404).json({ error: 'Burn not found' });
+        return res.json(burn);
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
-//creates student
+//creates burn
 exports.create = async (req, res) => {
-    //get requested student properties
-    const {number, name, city, birthday } = req.body;
-    //just return same new student
-    return res.status(201).send(req.body);
+    try{
+        const { reason, latitude, longitude, otherData, userId, type } = req.body;
+        
+        if (!reason || !latitude || !longitude || !userId || !type) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const newBurn = await prisma.burns.create({
+            data: {
+                date: new Date(),
+                reason,
+                latitude,
+                longitude,
+                otherData,
+                userId,
+                type
+            }
+        });
+        return res.status(201).json(newBurn);
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
-//updates student
-exports.update = async (req, res) => {
-    //get requested student properties
-    const {number, name, city, birthday } = req.body;
-    //just return same new student
-    return res.send(req.body);
-}
-
-//delete student by his id (student number)
+//delete burn by his id (burn number)
 exports.delete = async (req, res) => {
-    //get student id requested
-    const id = req.params.number;
-    //just return ok
-    return res.send("ok");
+    try {
+        const id = parseInt(req.params.number);
+        await prisma.burns.delete({
+            where: { id }
+        });
+        return res.send("ok");
+    } catch (error) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
