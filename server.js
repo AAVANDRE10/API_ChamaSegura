@@ -12,6 +12,8 @@ app.use(cors());
 
 app.use('/api/', router);
 
+app.use('/uploads', express.static('public/uploads'));
+
 const port = process.env.SERVER_PORT || 8080;
 
 app.listen(port, () => {
