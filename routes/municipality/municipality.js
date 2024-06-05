@@ -3,7 +3,7 @@ const controller = require('../../controllers/municipality/municipality');
 const authMiddleware = require('../../middlewares/auth');
 
 //use auth middleware
-//municipalityRouter.use(authMiddleware);
+municipalityRouter.use(authMiddleware);
 
 //municipalities CRUD
 municipalityRouter.get('/', controller.getAll); //read all
