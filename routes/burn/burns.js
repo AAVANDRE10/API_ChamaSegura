@@ -3,7 +3,7 @@ const controller = require('../../controllers/burn/burn');
 const authMiddleware = require('../../middlewares/auth');
 
 //use auth middleware
-burnRouter.use(authMiddleware);
+//burnRouter.use(authMiddleware);
 
 //burns CRUD
 burnRouter.get('/', controller.getAll); //read all
