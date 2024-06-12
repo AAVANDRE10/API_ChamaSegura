@@ -133,4 +133,4 @@ dist
 .nvmrc
 
 
-public/uploads/*
+!public/uploads/*
