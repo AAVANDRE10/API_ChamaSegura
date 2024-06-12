@@ -23,9 +23,10 @@ exports.signin = async (req, res) => {
             }
         }
 
-        res.status(401).json({ msg: "invalid_login" });
+        res.status(401).json({ msg: "Invalid email/password" });
 
     } catch (error) {
+        console.error(`Error while trying to sign in: ${ error }`);
         res.status(500).json({ msg: "Internal Server Error" });
     }
 }
@@ -59,6 +60,7 @@ exports.signup = async (req, res) => {
         res.status(201).json({ name: newUser.name, token: accessToken });
 
     } catch (error) {
-        res.status(500).json({ msg: `Internal Server Error: ${error}` });
+        console.error(`Error while trying to sign up: ${ error }`);
+        res.status(500).json({ msg: 'Internal Server Error' });
     }
 }
