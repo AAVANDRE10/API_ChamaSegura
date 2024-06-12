@@ -32,7 +32,7 @@ exports.signin = async (req, res) => {
 
 exports.signup = async (req, res) => {
     try {
-        const { name, username, email, password, type } = req.body;
+        const { name, email, password, type } = req.body;
 
         const existingUser = await prisma.users.findUnique({
             where: {
@@ -49,7 +49,6 @@ exports.signup = async (req, res) => {
         const newUser = await prisma.users.create({
             data: {
                 name: name,
-                username: username,
                 email: email,
                 password: hashedPassword,
                 type: type,
