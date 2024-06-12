@@ -32,7 +32,7 @@ exports.signin = async (req, res) => {
 
 exports.signup = async (req, res) => {
     try {
-        const { name, email, password, type } = req.body;
+        const { name, email, password, type, nif } = req.body;
 
         const existingUser = await prisma.users.findUnique({
             where: {
@@ -52,6 +52,7 @@ exports.signup = async (req, res) => {
                 email: email,
                 password: hashedPassword,
                 type: type,
+                nif: nif,
             },
         });
 

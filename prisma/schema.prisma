@@ -25,6 +25,7 @@ model Users {
   id           Int              @id @default(autoincrement())
   name         String
   email        String           @unique
+  nif          Int?              @unique
   password     String
   photo        String?
   type         UserType         @default(REGULAR)
