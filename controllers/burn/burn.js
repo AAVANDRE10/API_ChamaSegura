@@ -9,6 +9,7 @@ exports.getAll = async (req, res) => {
         const burns = await prisma.burns.findMany();
         return res.json(burns);
     } catch (error) {
+        console.error(`Error while trying to get burns: ${ error }`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -23,6 +24,7 @@ exports.getById = async (req, res) => {
         if (!burn) return res.status(404).json({ error: 'Burn not found' });
         return res.json(burn);
     } catch (error) {
+        console.error(`Error while trying to get burn by id: ${ error }`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -49,6 +51,7 @@ exports.create = async (req, res) => {
         });
         return res.status(201).json(newBurn);
     } catch (error) {
+        console.error(`Error while trying to create burns: ${ error }`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -62,6 +65,7 @@ exports.delete = async (req, res) => {
         });
         return res.send("ok");
     } catch (error) {
+        console.error(`Error while trying to delete burns: ${ error }`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }

@@ -20,9 +20,10 @@ exports.getById = async (req, res) => {
         const municipality = await prisma.municipalities.findUnique({
             where: { id }
         });
-        if (!municipality) return res.status(404).json({ error: 'Municipality not found' });
+        if (!municipality || municipality && municipality.state === 'DISABLED') return res.status(404).json({ error: 'Municipality not found' });
         return res.json(municipality);
     } catch (error) {
+        console.error(`Error while trying to get Municipality by id: ${ error }`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -42,6 +43,7 @@ exports.create = async (req, res) => {
         });
         return res.status(201).json(newMunicipality);
     } catch (error) {
+        console.error(`Error while trying to create Municipality: ${ error }`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -77,6 +79,7 @@ exports.delete = async (req, res) => {
         });
         return res.send("ok");
     } catch (error) {
+        console.error(`Error while trying to delete Municipality: ${ error }`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
