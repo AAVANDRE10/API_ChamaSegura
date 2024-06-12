@@ -60,6 +60,6 @@ exports.signup = async (req, res) => {
         res.status(201).json({ name: newUser.name, token: accessToken });
 
     } catch (error) {
-        res.status(500).json({ msg: "Internal Server Error" });
+        res.status(500).json({ msg: `Internal Server Error: ${error}` });
     }
 }
