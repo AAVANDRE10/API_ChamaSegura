@@ -68,7 +68,7 @@ exports.signup = async (req, res) => {
 
 exports.getUser = async (req, res) => {
     try {
-        const userId = parseInt(req.params.number);
+        const userId = parseInt(req.params.id);
 
         const user = await prisma.users.findUnique({
             where: {
