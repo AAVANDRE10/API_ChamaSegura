@@ -65,3 +65,57 @@ exports.signup = async (req, res) => {
         res.status(500).json({ msg: 'Internal Server Error' });
     }
 }
+
+exports.getUser = async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+
+        const user = await prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ msg: "User not found" });
+        }
+    } catch (error) {
+        console.error(`Error while trying to get user: ${error}`);
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
+}
+
+exports.updateUser = async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+        const { name, email, nif } = req.body;
+
+        const user = await prisma.users.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        const updatedUser = await prisma.users.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                name: name,
+                email: email,
+                nif: nif,
+            },
+        });
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error(`Error while trying to update user: ${error}`);
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
+}
