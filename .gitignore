@@ -132,6 +132,6 @@ dist
 .idea
 .nvmrc
 
-serviceAccountKey.json
+
 
 !public/uploads/*
