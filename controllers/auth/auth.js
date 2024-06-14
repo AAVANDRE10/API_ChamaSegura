@@ -89,30 +89,28 @@ exports.updateUser = async (req, res) => {
         const userId = parseInt(req.params.id);
         const { name, email, nif } = req.body;
 
-        const existingEmailUser = await prisma.users.findUnique({
-            where: {
-                email: email,
-            },
-        });
+        if (email) {
+            const existingEmailUser = await prisma.users.findUnique({
+                where: { email: email },
+            });
 
-        if (existingEmailUser && existingEmailUser.id !== userId) {
-            return res.status(400).json({ msg: "Email already in use by another user" });
+            if (existingEmailUser && existingEmailUser.id !== userId) {
+                return res.status(400).json({ msg: "Email already in use by another user" });
+            }
         }
 
-        const existingNifUser = await prisma.users.findUnique({
-            where: {
-                nif: nif,
-            },
-        });
+        if (nif) {
+            const existingNifUser = await prisma.users.findUnique({
+                where: { nif: nif },
+            });
 
-        if (existingNifUser && existingNifUser.id !== userId) {
-            return res.status(400).json({ msg: "NIF already in use by another user" });
+            if (existingNifUser && existingNifUser.id !== userId) {
+                return res.status(400).json({ msg: "NIF already in use by another user" });
+            }
         }
 
         const updatedUser = await prisma.users.update({
-            where: {
-                id: userId,
-            },
+            where: { id: userId },
             data: {
                 name: name,
                 email: email,
