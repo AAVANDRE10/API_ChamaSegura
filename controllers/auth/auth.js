@@ -95,6 +95,7 @@ exports.updateUser = async (req, res) => {
             });
 
             if (existingEmailUser && existingEmailUser.id !== userId) {
+                console.error(`Error while trying to get user: ${error}`);
                 return res.status(400).json({ msg: "Email already in use by another user" });
             }
         }
@@ -105,6 +106,7 @@ exports.updateUser = async (req, res) => {
             });
 
             if (existingNifUser && existingNifUser.id !== userId) {
+                console.error(`Error while trying to get user: ${error}`);
                 return res.status(400).json({ msg: "NIF already in use by another user" });
             }
         }
