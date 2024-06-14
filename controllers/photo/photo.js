@@ -1,20 +1,12 @@
-const fs = require('fs');
-const path = require('path');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const bucket = require('../../utils/firebaseAdmin');
 
 exports.updatePhoto = async (req, res) => {
     const userId = parseInt(req.params.id, 10);
     const file = req.file;
 
     try {
-        console.log(`Received request to update photo for user ID: ${userId}`);
-        if (!file) {
-            console.error('No file uploaded');
-            return res.status(400).json({ msg: 'No file uploaded' });
-        }
-
-        console.log(`File uploaded: ${file.originalname}`);
         const existingUser = await prisma.users.findUnique({
             where: {
                 id: userId,
@@ -22,28 +14,37 @@ exports.updatePhoto = async (req, res) => {
         });
 
         if (!existingUser) {
-            console.error('User not found');
             return res.status(404).json({ msg: 'User not found' });
         }
 
-        const timestamp = Date.now();
-        const fileName = `${timestamp}_${file.originalname}`;
-        const finalImagePath = path.join(__dirname, '../../public/uploads', fileName);
-
-        if (!fs.existsSync(finalImagePath)) {
-            fs.renameSync(file.path, finalImagePath);
-            console.log(`File saved to ${finalImagePath}`);
-
-            const updatedUser = await prisma.users.update({
-                where: { id: userId },
-                data: { photo: `/uploads/${fileName}` },
+        if (file) {
+            const fileName = `${Date.now()}_${file.originalname}`;
+            const fileUpload = bucket.file(`uploads/${fileName}`);
+            const blobStream = fileUpload.createWriteStream({
+                metadata: {
+                    contentType: file.mimetype,
+                },
             });
 
-            console.log('User photo updated successfully');
-            return res.status(200).json(updatedUser);
+            blobStream.on('error', (error) => {
+                console.error('Error uploading file:', error);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            });
+
+            blobStream.on('finish', async () => {
+                const publicUrl = `https://storage.googleapis.com/${bucket.name}/uploads/${fileName}`;
+
+                const updatedUser = await prisma.users.update({
+                    where: { id: userId },
+                    data: { photo: publicUrl },
+                });
+
+                return res.status(200).json(updatedUser);
+            });
+
+            blobStream.end(file.buffer);
         } else {
-            console.error('File with the same name already exists');
-            return res.status(400).json({ msg: 'File with the same name already exists' });
+            return res.status(400).json({ msg: 'No file uploaded' });
         }
     } catch (error) {
         console.error('Error updating user photo:', error);
