@@ -124,3 +124,35 @@ exports.updateUser = async (req, res) => {
         res.status(500).json({ msg: "Internal Server Error" });
     }
 }
+
+exports.changePassword = async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+        const { oldPassword, newPassword } = req.body;
+
+        const user = await prisma.users.findUnique({
+            where: { id: userId },
+        });
+
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        const passwordIsValid = bcrypt.compareSync(oldPassword, user.password);
+        if (!passwordIsValid) {
+            return res.status(401).json({ msg: "Invalid old password" });
+        }
+
+        const hashedNewPassword = bcrypt.hashSync(newPassword, 8);
+
+        await prisma.users.update({
+            where: { id: userId },
+            data: { password: hashedNewPassword },
+        });
+
+        res.status(200).json({ msg: "Password updated successfully" });
+    } catch (error) {
+        console.error(`Error while trying to change password: ${error}`);
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
+}

@@ -7,5 +7,6 @@ authRouter.post('/signup', controller.signup);
 
 authRouter.get('/user/:id', authMiddleware, controller.getUser);
 authRouter.put('/updateuser/:id', authMiddleware, controller.updateUser);
+authRouter.put('/changepassword/:id', authMiddleware, controller.changePassword);
 
 module.exports = authRouter;
