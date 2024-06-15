@@ -29,6 +29,20 @@ exports.getById = async (req, res) => {
     }
 }
 
+// Return all burns for a specific user by user ID
+exports.getByUser = async (req, res) => {
+    try {
+        const id = parseInt(req.params.number);
+        const burns = await prisma.burns.findMany({
+            where: { id }
+        });
+        return res.json(burns);
+    } catch (error) {
+        console.error(`Error while trying to get burns by user: ${ error }`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 //creates burn
 exports.create = async (req, res) => {
     try{
