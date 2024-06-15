@@ -66,6 +66,16 @@ exports.signup = async (req, res) => {
     }
 }
 
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await prisma.users.findMany();
+        return res.json(users);
+    } catch (error) {
+        console.error(`Error while trying to get users: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 exports.getUser = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
