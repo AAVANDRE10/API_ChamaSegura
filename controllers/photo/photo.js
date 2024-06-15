@@ -36,12 +36,17 @@ exports.updatePhoto = async (req, res) => {
             });
 
             blobStream.on('finish', async () => {
-                const publicUrl = `https://storage.googleapis.com/${bucket.name}/uploads/${fileName}`;
-                console.log(`File uploaded successfully: ${publicUrl}`);
+                // Gera o token de acesso para a URL pública da imagem
+                const [url] = await fileUpload.getSignedUrl({
+                    action: 'read',
+                    expires: '03-17-2025', // Defina a data de expiração do token conforme necessário
+                });
+
+                console.log(`File uploaded successfully: ${url}`);
 
                 const updatedUser = await prisma.users.update({
                     where: { id: userId },
-                    data: { photo: publicUrl },
+                    data: { photo: url },
                 });
 
                 console.log(`User photo updated successfully for user ID: ${userId}`);
