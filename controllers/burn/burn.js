@@ -32,9 +32,9 @@ exports.getById = async (req, res) => {
 // Return all burns for a specific user by user ID
 exports.getByUser = async (req, res) => {
     try {
-        const id = parseInt(req.params.number);
+        const userId = parseInt(req.params.id);
         const burns = await prisma.burns.findMany({
-            where: { id }
+            where: { userId }
         });
         return res.json(burns);
     } catch (error) {
