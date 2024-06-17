@@ -61,6 +61,20 @@ exports.getByUserAndType = async (req, res) => {
     }
 }
 
+// Return all burns by type
+exports.getByType = async (req, res) => {
+    try {
+        const type = req.params.type;
+        const burns = await prisma.burns.findMany({
+            where: { type }
+        });
+        return res.json(burns);
+    } catch (error) {
+        console.error(`Error while trying to get burns by type: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 exports.getByState = async (req, res) => {
     try {
         const state = req.params.state;
