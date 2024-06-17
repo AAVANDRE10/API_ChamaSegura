@@ -63,7 +63,7 @@ exports.getByUserAndType = async (req, res) => {
 
 //creates burn
 exports.create = async (req, res) => {
-    try{
+    try {
         const { date, reason, latitude, longitude, otherData, userId, type, distrito, concelho, freguesia } = req.body;
 
         if (!reason || !latitude || !longitude || !userId || !type || !distrito || !concelho || !freguesia) {
@@ -90,6 +90,7 @@ exports.create = async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
 
 //delete burn by his id (burn number)
 exports.delete = async (req, res) => {

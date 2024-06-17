@@ -51,6 +51,9 @@ model Burns {
   latitude  Float
   longitude Float
   otherData String?  @map("other_data")
+  distrito   String
+  concelho   String
+  freguesia  String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      Users    @relation(fields: [userId], references: [id])
