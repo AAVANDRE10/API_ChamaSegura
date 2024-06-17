@@ -77,7 +77,7 @@ exports.getByState = async (req, res) => {
 //creates burn
 exports.create = async (req, res) => {
     try {
-        const { date, reason, latitude, longitude, otherData, userId, type, distrito, concelho, freguesia } = req.body;
+        const { date, reason, latitude, longitude, otherData, userId, type, distrito, concelho, freguesia, state } = req.body;
 
         if (!reason || !latitude || !longitude || !userId || !type || !distrito || !concelho || !freguesia) {
             return res.status(400).json({ error: 'Missing required fields' });
