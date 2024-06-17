@@ -61,6 +61,19 @@ exports.getByUserAndType = async (req, res) => {
     }
 }
 
+exports.getByState = async (req, res) => {
+    try {
+        const state = req.params.state;
+        const burns = await prisma.burns.findMany({
+            where: { state: state }
+        });
+        return res.json(burns);
+    } catch (error) {
+        console.error(`Error while trying to get burns by state: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 //creates burn
 exports.create = async (req, res) => {
     try {
@@ -81,7 +94,8 @@ exports.create = async (req, res) => {
                 type,
                 distrito,
                 concelho,
-                freguesia
+                freguesia,
+                state
             }
         });
         return res.status(201).json(newBurn);
