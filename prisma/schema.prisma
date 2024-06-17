@@ -16,7 +16,6 @@ enum BurnType {
 enum State {
   APPROVED
   PENDING
-  PENDINGCM
   DENIED
   DELETED
 }
@@ -79,5 +78,5 @@ model Municipalities {
 
 enum StateUser {
   ENABLED
-  DISBALED
+  DISABLED
 }
