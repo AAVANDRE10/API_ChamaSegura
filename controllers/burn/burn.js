@@ -64,12 +64,12 @@ exports.getByUserAndType = async (req, res) => {
 //creates burn
 exports.create = async (req, res) => {
     try{
-        const { date, reason, latitude, longitude, otherData, userId, type } = req.body;
-        
-        if (!reason || !latitude || !longitude || !userId || !type) {
+        const { date, reason, latitude, longitude, otherData, userId, type, distrito, concelho, freguesia } = req.body;
+
+        if (!reason || !latitude || !longitude || !userId || !type || !distrito || !concelho || !freguesia) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
-        
+
         const newBurn = await prisma.burns.create({
             data: {
                 date: date,
@@ -78,7 +78,10 @@ exports.create = async (req, res) => {
                 longitude,
                 otherData,
                 userId,
-                type
+                type,
+                distrito,
+                concelho,
+                freguesia
             }
         });
         return res.status(201).json(newBurn);
