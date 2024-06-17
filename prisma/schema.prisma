@@ -24,7 +24,7 @@ model Users {
   id           Int              @id @default(autoincrement())
   name         String
   email        String           @unique
-  nif          Int?              @unique
+  nif          Int?             @unique
   password     String
   photo        String?
   type         UserType         @default(REGULAR)
@@ -65,12 +65,12 @@ model Burns {
 
 model Municipalities {
   id          Int      @id @default(autoincrement())
+  name        String   @unique
   taxNumber   String   @map("tax_number")
   address     String
-  responsible String
-  state       State    @default(PENDING)
-  user        Users    @relation(fields: [userId], references: [id])
-  userId      Int      @map("user_id")
+  state       State    @default(APPROVED)
+  user        Users    @relation(fields: [responsible], references: [id])
+  responsible Int      @map("responsible")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
