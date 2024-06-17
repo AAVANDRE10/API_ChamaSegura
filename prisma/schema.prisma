@@ -69,8 +69,8 @@ model Municipalities {
   taxNumber   String   @map("tax_number")
   address     String
   state       State    @default(APPROVED)
-  user        Users    @relation(fields: [responsible], references: [id])
-  responsible Int      @map("responsible")
+  user        Users?    @relation(fields: [responsible], references: [id])
+  responsible Int?      @map("responsible")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
