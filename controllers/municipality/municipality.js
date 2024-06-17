@@ -65,7 +65,7 @@ exports.update = async (req, res) => {
         });
         return res.json(updatedMunicipality);
     } catch (error) {
-        console.error('Error updating municipality:', error);
+        console.error(`Error updating municipality: ${error}`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
