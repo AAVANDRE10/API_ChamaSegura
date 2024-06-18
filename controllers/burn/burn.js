@@ -166,6 +166,10 @@ exports.updateBurnState = async (req, res) => {
         const id = parseInt(req.params.id);
         const newState = req.params.state;
 
+        if (!['APPROVED', 'PENDING', 'DENIED', 'DELETED'].includes(newState)) {
+            return res.status(400).json({ error: 'Invalid state' });
+        }
+
         const updatedBurn = await prisma.burns.update({
             where: { id },
             data: { state: newState }
@@ -173,10 +177,13 @@ exports.updateBurnState = async (req, res) => {
 
         return res.json(updatedBurn);
     } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: 'Burn not found' });
+        }
         console.error(`Error while trying to update burn state: ${error}`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+};
 
 //creates burn
 exports.create = async (req, res) => {
