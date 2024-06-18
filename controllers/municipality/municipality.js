@@ -28,20 +28,20 @@ exports.getById = async (req, res) => {
     }
 }
 
-// Get municipality by responsible user ID
+// Return municipality by responsible user ID
 exports.getByResponsibleUserId = async (req, res) => {
     try {
         const userId = parseInt(req.params.userId);
-        const municipality = await prisma.municipalities.findUnique({
+        const municipality = await prisma.municipalities.findFirst({
             where: { responsible: userId }
         });
-        if (!municipality || municipality && municipality.state === 'DISABLED') return res.status(404).json({ error: 'Municipality not found' });
+        if (!municipality) return res.status(404).json({ error: 'Municipality not found' });
         return res.json(municipality);
     } catch (error) {
         console.error(`Error while trying to get Municipality by responsible user ID: ${ error }`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
-}
+};
 
 // Create a new municipality
 exports.create = async (req, res) => {
