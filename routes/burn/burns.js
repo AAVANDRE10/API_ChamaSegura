@@ -12,6 +12,8 @@ burnRouter.get('/user/:id', controller.getByUser); //read one by his id (burn nu
 burnRouter.get('/user/:userId/type/:type', controller.getByUserAndType); //read burns by user and type
 burnRouter.get('/type/:type', controller.getByType); // Read all burns by type
 burnRouter.get('/state/:state/type/:type', controller.getByStateAndType); // Read burns by state and type
+burnRouter.get('/state/:state/concelho/:concelho', controller.getByStateAndConcelho); // Read burns by state and concelho
+burnRouter.get('/state/:state/concelho/:concelho/type/:type', controller.getByStateConcelhoAndType); // Read burns by state, concelho, and type
 burnRouter.get('/state/:state', controller.getByState); // Read burns by state
 burnRouter.post('/create', controller.create); //create new burn
 burnRouter.delete('/delete/:number', controller.delete); //delete burn

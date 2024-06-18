@@ -106,6 +106,44 @@ exports.getByState = async (req, res) => {
     }
 };
 
+// Return all burns by state and concelho
+exports.getByStateAndConcelho = async (req, res) => {
+    try {
+        const state = req.params.state;
+        const concelho = req.params.concelho;
+        const burns = await prisma.burns.findMany({
+            where: {
+                state,
+                concelho
+            }
+        });
+        return res.json(burns);
+    } catch (error) {
+        console.error(`Error while trying to get burns by state and concelho: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+// Return all burns by state, concelho and type
+exports.getByStateConcelhoAndType = async (req, res) => {
+    try {
+        const state = req.params.state;
+        const concelho = req.params.concelho;
+        const type = req.params.type;
+        const burns = await prisma.burns.findMany({
+            where: {
+                state,
+                concelho,
+                type
+            }
+        });
+        return res.json(burns);
+    } catch (error) {
+        console.error(`Error while trying to get burns by state, concelho and type: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 //creates burn
 exports.create = async (req, res) => {
     try {
