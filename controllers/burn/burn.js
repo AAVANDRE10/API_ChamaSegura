@@ -144,6 +144,22 @@ exports.getByStateConcelhoAndType = async (req, res) => {
     }
 }
 
+// Return all burns by concelho
+exports.getByConcelho = async (req, res) => {
+    try {
+        const concelho = req.params.concelho;
+        const burns = await prisma.burns.findMany({
+            where: {
+                concelho
+            }
+        });
+        return res.json(burns);
+    } catch (error) {
+        console.error(`Error while trying to get burns by concelho: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 //creates burn
 exports.create = async (req, res) => {
     try {
