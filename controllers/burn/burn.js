@@ -158,7 +158,25 @@ exports.getByConcelho = async (req, res) => {
         console.error(`Error while trying to get burns by concelho: ${error}`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
-};
+}
+
+// Update the status of a burn
+exports.updateBurnState = async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const newState = req.params.state;
+
+        const updatedBurn = await prisma.burns.update({
+            where: { id },
+            data: { state: newState }
+        });
+
+        return res.json(updatedBurn);
+    } catch (error) {
+        console.error(`Error while trying to update burn state: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
 
 //creates burn
 exports.create = async (req, res) => {
