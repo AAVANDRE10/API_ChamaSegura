@@ -14,6 +14,10 @@ exports.signin = async (req, res) => {
         });
 
         if (user) {
+            if (user.state !== 'ENABLED') {
+                return res.status(403).json({ msg: "Account is disabled" });
+            }
+
             const passwordIsValid = bcrypt.compareSync(password, user.password);
 
             if (passwordIsValid) {
