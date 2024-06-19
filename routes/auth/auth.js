@@ -9,5 +9,6 @@ authRouter.get('/users', authMiddleware, controller.getAllUsers);
 authRouter.get('/user/:id', authMiddleware, controller.getUser);
 authRouter.put('/updateuser/:id', authMiddleware, controller.updateUser);
 authRouter.put('/changepassword/:id', authMiddleware, controller.changePassword);
+authRouter.put('/updatestate/:id', authMiddleware, controller.updateUserState);
 
 module.exports = authRouter;

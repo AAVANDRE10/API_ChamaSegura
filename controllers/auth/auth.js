@@ -135,6 +135,23 @@ exports.updateUser = async (req, res) => {
     }
 }
 
+exports.updateUserState = async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+        const { state } = req.body;
+
+        const updatedUser = await prisma.users.update({
+            where: { id: userId },
+            data: { state: state },
+        });
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error(`Error while trying to update user state: ${error}`);
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
+};
+
 exports.changePassword = async (req, res) => {
     try {
         const userId = parseInt(req.params.id);
