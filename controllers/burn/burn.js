@@ -185,6 +185,21 @@ exports.updateBurnState = async (req, res) => {
     }
 };
 
+exports.getNumberOfBurnRequests = async (req, res) => {
+    try {
+        const userId = parseInt(req.params.userId);
+
+        const burnCount = await prisma.burns.count({
+            where: { userId: userId }
+        });
+
+        res.status(200).json({ count: burnCount });
+    } catch (error) {
+        console.error(`Error while trying to get number of burn requests: ${error}`);
+        res.status(500).json({ msg: "Internal Server Error" });
+    }
+}
+
 //creates burn
 exports.create = async (req, res) => {
     try {
