@@ -21,7 +21,7 @@ exports.signin = async (req, res) => {
             const passwordIsValid = bcrypt.compareSync(password, user.password);
 
             if (passwordIsValid) {
-                const accessToken = authenticateUtil.generateAccessToken({ id: user.id, name: user.name });
+                const accessToken = authenticateUtil.generateAccessToken({ id: user.id, name: user.name, type: user.type, state: user.state });
                 res.status(200).json({ name: user.name, token: accessToken });
                 return;
             }
@@ -37,7 +37,7 @@ exports.signin = async (req, res) => {
 
 exports.signup = async (req, res) => {
     try {
-        const { name, email, password, type, nif } = req.body;
+        const { name, email, password, type, nif, state } = req.body;
 
         const existingUser = await prisma.users.findUnique({
             where: {
@@ -58,10 +58,11 @@ exports.signup = async (req, res) => {
                 password: hashedPassword,
                 type: type,
                 nif: nif,
+                state: state,
             },
         });
 
-        const accessToken = authenticateUtil.generateAccessToken({ id: newUser.id, name: newUser.name });
+        const accessToken = authenticateUtil.generateAccessToken({ id: user.id, name: user.name, type: user.type, state: user.state });
         res.status(201).json({ name: newUser.name, token: accessToken });
 
     } catch (error) {
