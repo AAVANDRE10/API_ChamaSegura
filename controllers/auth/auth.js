@@ -62,7 +62,7 @@ exports.signup = async (req, res) => {
             },
         });
 
-        const accessToken = authenticateUtil.generateAccessToken({ id: user.id, name: user.name, type: user.type, state: user.state });
+        const accessToken = authenticateUtil.generateAccessToken({ id: newUser.id, name: newUser.name, type: newUser.type, state: newUser.state });
         res.status(201).json({ name: newUser.name, token: accessToken });
 
     } catch (error) {
