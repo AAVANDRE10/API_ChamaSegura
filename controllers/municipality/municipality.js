@@ -47,6 +47,26 @@ exports.getByResponsibleUserId = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const { name, taxNumber, address, state, responsible } = req.body;
+
+        // Check if the responsible user is of type CM or ICNF
+        if (responsible) {
+            const user = await prisma.users.findUnique({
+                where: { id: responsible }
+            });
+
+            if (!user || (user.type !== 'CM' && user.type !== 'ICNF')) {
+                return res.status(400).json({ error: 'User must be of type CM or ICNF to be responsible for a municipality' });
+            }
+
+            // Check if the user is already responsible for another municipality
+            const existingMunicipality = await prisma.municipalities.findFirst({
+                where: { responsible }
+            });
+            if (existingMunicipality) {
+                return res.status(400).json({ error: 'User is already responsible for another municipality' });
+            }
+        }
+
         const newMunicipality = await prisma.municipalities.create({
             data: {
                 name,
@@ -68,6 +88,31 @@ exports.update = async (req, res) => {
     try {
         const id = parseInt(req.params.number);
         const { name, taxNumber, address, state, responsible } = req.body;
+
+        // Check if the responsible user is of type CM or ICNF
+        if (responsible) {
+            const user = await prisma.users.findUnique({
+                where: { id: responsible }
+            });
+
+            if (!user || (user.type !== 'CM' && user.type !== 'ICNF')) {
+                return res.status(400).json({ error: 'User must be of type CM or ICNF to be responsible for a municipality' });
+            }
+
+            // Check if the user is already responsible for another municipality
+            const existingMunicipality = await prisma.municipalities.findFirst({
+                where: {
+                    responsible,
+                    id: {
+                        not: id
+                    }
+                }
+            });
+            if (existingMunicipality) {
+                return res.status(400).json({ error: 'User is already responsible for another municipality' });
+            }
+        }
+
         const updatedMunicipality = await prisma.municipalities.update({
             where: { id },
             data: {
