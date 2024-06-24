@@ -31,7 +31,7 @@ const sendContactEmail = async (req, res) => {
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to: emails.join(','),
-      subject: 'Contact from App',
+      subject: 'Chama Segura App',
       text: message,
     };
 
