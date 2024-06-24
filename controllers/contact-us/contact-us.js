@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const sendContactEmail = async (req, res) => {
   try {
-    const { subject, message, userName, userEmail, userNif } = req.body;
+    const { subject, message } = req.body;
 
     // Fetch all ICNF users' emails
     const representatives = await prisma.users.findMany({
@@ -32,7 +32,7 @@ const sendContactEmail = async (req, res) => {
       from: process.env.GMAIL_USER,
       to: emails.join(','),
       subject: `Chama Segura - ${subject}`,
-      text: `${message}\n\nUser Details:\nName: ${userName}\nEmail: ${userEmail}\nNIF: ${userNif}`,
+      text: message,
     };
 
     // Send the email
