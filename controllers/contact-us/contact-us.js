@@ -5,6 +5,21 @@ const prisma = new PrismaClient();
 const sendContactEmail = async (req, res) => {
   try {
     const { subject, message } = req.body;
+    const token = req.headers.authorization.split(' ')[1];
+
+    // Get user information from token
+    const userId = JwtUtils.getUserIdFromToken(token);
+    if (!userId) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     // Fetch all ICNF users' emails
     const representatives = await prisma.users.findMany({
