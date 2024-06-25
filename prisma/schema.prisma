@@ -33,6 +33,8 @@ model Users {
   burns        Burns[]
   municipality Municipalities[]
   state        StateUser        @default(ENABLED)
+  resetToken   String?          @unique
+  resetTokenExpires DateTime?
 
   @@map("users")
 }
