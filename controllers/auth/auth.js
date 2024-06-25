@@ -252,7 +252,7 @@ exports.forgotPassword = async (req, res) => {
         const mailOptions = {
             from: process.env.GMAIL_USER,
             to: email,
-            subject: 'Password Reset Request',
+            subject: 'Chama Segura APP - Password Reset Request',
             text: `You requested a password reset. Use the following code to reset your password: ${resetCode}`,
         };
 

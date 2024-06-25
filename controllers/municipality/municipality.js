@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 // Return all municipalities
 exports.getAll = async (req, res) => {
     try {
-        const municipalities = await prisma.municipalities.findMany();
+        const municipalities = await prisma.municipalities.findMany({
+            orderBy: {
+                name: 'asc'
+            }
+        });
         return res.json(municipalities);
     } catch (error) {
         return res.status(500).json({ error: 'Internal Server Error' });
